@@ -1,80 +1,86 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aes-sarg <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/22 12:13:58 by aes-sarg          #+#    #+#             */
-/*   Updated: 2023/11/22 13:30:38 by aes-sarg         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-#include <stdarg.h>
-#include <unistd.h>
+#include "ft_printf.h"
 
-void ft_putchar(char c)
+int	ft_putnbr_base(unsigned long nb, int base)
 {
-	write(1,&c,1);
-}
-void ft_putstr(char *str)
-{
-	while(*str)
+	int	len;
+
+	len = 0;
+	if (nb < 16)
 	{
-		ft_putchar(*str);
-		str++;
-	}
-}
-
-void print_int(int num) {
-    if (num < 0) {
-        ft_putchar('-');
-        num = -num;
-    }
-
-    char buffer[20]; 
-    int i = 0;
-    do {
-        buffer[i++] = '0' + num % 10;
-        num /= 10;
-    } while (num > 0);
-
-    while (--i >= 0) {
-        ft_putchar(buffer[i]);
-    }
-}
-int ft_printf(const char *str, ...)
-{
-	va_list args;
-	va_start(args,str);
-	while(*str)
-	{
-		if (*str == '%')
+		if (nb < 10)
+			len += ft_putchar(nb + 48);
+		else
 		{
-			str++;
-			if (*str == 'd')
-				print_int(va_arg(args,int));
-			else if (*str == 'c')
-				ft_putchar(va_arg(args,int));
-			else if (*str == 's')
-				ft_putstr(va_arg(args,char *));
+			if (base == 1)
+				len += ft_putchar(nb + 87);
 			else
-				ft_putchar('%');
+				len += ft_putchar(nb + 55);
 		}
-		else{
-			ft_putchar(*str);
-		}
-		str++;
 	}
-	va_end(args);
-return 0;
+	if (nb >= 16)
+	{
+		len += ft_putnbr_base(nb / 16, base);
+		len += ft_putnbr_base(nb % 16, base);
+	}
+	return (len);
 }
 
-int main()
+int	ft_option(char c, va_list list)
 {
-	char c = 'q';
-	int a = 1245421;
-	char *s = " Hello ayoub";
-	ft_printf("the character:% %c is not exist in this number: %d or in this string: %s ",c,a,s);
+	if (c == 'c')
+		return (ft_putchar(va_arg(list, int)));
+	else if (c == 'd' || c == 'i')
+		return (ft_putnbr(va_arg(list, int)));
+	else if (c == 'u')
+		return (ft_putnbr_u(va_arg(list, int)));
+	else if (c == 's')
+		return (ft_putstr(va_arg(list, char *)));
+	else if (c == 'x')
+		return (ft_putnbr_base(va_arg(list, unsigned int), 1));
+	else if (c == 'X')
+		return (
+			ft_putnbr_base(va_arg(list, unsigned int), 2));
+	else if (c == 'p')
+	{
+		ft_putstr("0x");
+		return (2 + ft_putnbr_base(va_arg(list, unsigned long int), 1));
+	}
+	else if (c == '%')
+	{
+		return (ft_putchar('%'));
+	}
 	return (0);
 }
 
+int	ft_printf(const char *str, ...)
+{
+	va_list	list;
+	int		i;
+	int		len;
+
+	va_start(list, str);
+	i = 0;
+	len = 0;
+	while (str && str[i])
+	{
+		if (str[i] != '%')
+			len += ft_putchar(str[i]);
+		else if (str[i + 1])
+		{
+			len += ft_option(str[i + 1], list);
+			i++;
+		}
+		i++;
+	}
+	va_end(list);
+	return (len);
+}
+
+// # define STR " %d ", 10
+// int main()
+// {
+// 	ft_printf(STR);
+// 	printf("\n");
+//     printf(STR);
+// 	printf("\n");
+// }
