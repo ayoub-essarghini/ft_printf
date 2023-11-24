@@ -6,7 +6,7 @@
 /*   By: aes-sarg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 02:46:09 by aes-sarg          #+#    #+#             */
-/*   Updated: 2023/11/24 20:15:06 by aes-sarg         ###   ########.fr       */
+/*   Updated: 2023/11/24 22:47:47 by aes-sarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	ft_option(char c, va_list list)
 	{
 		return (ft_putchar('%'));
 	}
+	else
+		return (ft_putchar(c));
 	return (0);
 }
 
