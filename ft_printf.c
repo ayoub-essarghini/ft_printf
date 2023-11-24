@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aes-sarg <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/24 02:46:09 by aes-sarg          #+#    #+#             */
+/*   Updated: 2023/11/24 02:46:09 by aes-sarg         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 int	ft_putnbr_base(unsigned long nb, int base)
@@ -38,8 +50,7 @@ int	ft_option(char c, va_list list)
 	else if (c == 'x')
 		return (ft_putnbr_base(va_arg(list, unsigned int), 1));
 	else if (c == 'X')
-		return (
-			ft_putnbr_base(va_arg(list, unsigned int), 2));
+		return (ft_putnbr_base(va_arg(list, unsigned int), 2));
 	else if (c == 'p')
 	{
 		ft_putstr("0x");
